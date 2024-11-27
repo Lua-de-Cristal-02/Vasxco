@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Escolhas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <h1>Jogo de Escolhas</h1>
+    <div id="story"></div>
+    <div id="choices"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+#game-container {
+  width: 80%;
+  max-width: 600px;
+  margin: 50px auto;
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+#story {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+#choices button {
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#choices button:hover {
+  background-color: #777;
+}
+const storyElement = document.getElementById('story');
+const choicesElement = document.getElementById('choices');
+
+const story = {
+  start: {
+    text: "Você acorda em uma floresta misteriosa. Tudo ao seu redor é estranho e desconhecido. Você precisa decidir o que fazer.",
+    choices: [
+      { text: "Explorar a floresta", next: "explore" },
+      { text: "Ficar onde está", next: "stay" }
+    ]
+  },
+  explore: {
+    text: "Você decide explorar a floresta. Após caminhar por um tempo, encontra uma cabana abandonada.",
+    choices: [
+      { text: "Entrar na cabana", next: "cabin" },
+      { text: "Continuar explorando", next: "deep_forest" }
+    ]
+  },
+  stay: {
+    text: "Você decide ficar onde está. O tempo passa e a noite cai. Sem abrigo ou comida, você começa a sentir frio e fome.",
+    choices: [
+      { text: "Tentar encontrar comida", next: "food" },
+      { text: "Ficar parado e esperar por ajuda", next: "wait" }
+    ]
+  },
+  cabin: {
+    text: "Dentro da cabana, você encontra suprimentos e uma cama confortável. Parece um bom lugar para passar a noite.",
+    choices: [
+      { text: "Dormir", next: "end_safe" },
+      { text: "Sair da cabana", next: "deep_forest" }
+    ]
+  },
+  deep_forest: {
+    text: "Você continua caminhando pela floresta até se perder. A escuridão da noite chega e você começa a ouvir sons assustadores.",
+    choices: [
+      { text: "Tentar encontrar o caminho de volta", next: "lost" },
+      { text: "Procurar um lugar para se esconder", next: "hide" }
+    ]
+  },
+  food: {
+    text: "Você encontra algumas frutas no chão. Elas parecem seguras, mas você não tem certeza.",
+    choices: [
+      { text: "Comer as frutas", next: "end_poison" },
+      { text: "Ignorar as frutas", next: "wait" }
+    ]
+  },
+  wait: {
+    text: "Você espera por horas, mas ninguém aparece. Eventualmente, você adormece sob uma árvore.",
+    choices: [
+      { text: "Recomeçar", next: "start" }
+    ]
+  },
+  lost: {
+    text: "Você está completamente perdido. Sem direção e com pouca energia, você não consegue mais continuar.",
+    choices: [
+      { text: "Recomeçar", next: "start" }
+    ]
+  },
+  hide: {
+    text: "Você encontra um lugar para se esconder e passa a noite com segurança, mas sem direção clara para o próximo dia.",
+    choices: [
+      { text: "Recomeçar", next: "start" }
+    ]
+  },
+  end_safe: {
+    text: "Você dorme tranquilamente na cabana. Na manhã seguinte, encontra o caminho para casa. Você está salvo!",
+    choices: [
+      { text: "Recomeçar", next: "start" }
+    ]
+  },
+  end_poison: {
+    text: "As frutas estavam envenenadas. Você desmaia e nunca acorda.",
+    choices: [
+      { text: "Recomeçar", next: "start" }
+    ]
+  }
+};
+
+function showStory(storyNode) {
+  storyElement.textContent = storyNode.text;
+  choicesElement.innerHTML = '';
+
+  storyNode.choices.forEach(choice => {
+    const button = document.createElement('button');
+    button.textContent = choice.text;
+    button.onclick = () => showStory(story[choice.next]);
+    choicesElement.appendChild(button);
+  });
+}
+
+// Inicializa o jogo com o nó inicial da história
+showStory(story.start);
